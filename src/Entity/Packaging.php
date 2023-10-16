@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
+#[ORM\Table(name: 'packaging')]
 class Packaging
 {
-
     #[ORM\Id]
     #[ORM\Column(type: Types::INTEGER)]
     #[ORM\GeneratedValue]
@@ -34,4 +36,28 @@ class Packaging
         $this->maxWeight = $maxWeight;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getWidth(): float
+    {
+        return $this->width;
+    }
+
+    public function getHeight(): float
+    {
+        return $this->height;
+    }
+
+    public function getLength(): float
+    {
+        return $this->length;
+    }
+
+    public function getMaxWeight(): float
+    {
+        return $this->maxWeight;
+    }
 }

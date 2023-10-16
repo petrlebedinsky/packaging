@@ -20,6 +20,10 @@ readonly class Validator
      */
     public function validateProducts(array $products): void
     {
+        if (count($products) === 0) {
+            throw new ValidationException(['No products given on input, please provide at least one']);
+        }
+
         $errors = [];
         foreach($products as $product) {
             $productErrors = $this->validator->validate($product);

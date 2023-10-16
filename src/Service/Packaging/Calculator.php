@@ -4,26 +4,40 @@ declare(strict_types=1);
 
 namespace App\Service\Packaging;
 
-use App\Model\Box;
+use App\Entity\Packaging;
+use App\Model\Product;
 
 class Calculator
 {
     /**
      * @param FinderInterface[] $packagingFinders
      */
-    public function __construct(private array $packagingFinders)
+    public function __construct(
+        private readonly ExactPackageFinder $exactPackageFinder,
+        private readonly FinderInterface $fallbackFinder,
+        private array $packagingFinders,
+    )
     {
     }
 
-    public function findPackaging(): Box
+    /**
+     * @param Product[] $products
+     */
+    public function findPackaging(array $products): ?Packaging
     {
+        $packaging = $this->exactPackageFinder->getPackageForProducts($products);
+        if ($packaging !== null) {
+            return $packaging;
+        }
+
         foreach($this->packagingFinders as $finder) {
-            $box = $finder->findBox();
-            if ($box !== null) {
-                return $box;
+            $packaging = $finder->findPackaging($products);
+            if ($packaging !== null) {
+                return $packaging;
             }
         }
-        //@TODO: handle missing box
+
+        return $this->fallbackFinder->findPackaging($products);
     }
 
     public function addPackagingFinder(FinderInterface $finder): void

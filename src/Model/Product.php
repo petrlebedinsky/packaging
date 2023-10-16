@@ -46,4 +46,18 @@ readonly class Product
     {
         return $this->weight;
     }
+
+    /**
+     * @return array{biggest: float, mid: float, lowest: float}
+     */
+    public function getSortedDimensions(): array
+    {
+        $dimensions = [$this->width, $this->height, $this->length];
+        rsort($dimensions);
+        return [
+            'biggest' => $dimensions[0],
+            'mid' => $dimensions[1],
+            'lowest' => $dimensions[2],
+        ];
+    }
 }
